@@ -54,7 +54,14 @@ export function Home() {
                 className="basis-1/12 bg-slate-300/25 mr-auto h-1/2 mx-2 rounded-lg border border-gray-300/60"
                 onClick={randomCodeOnClickHandler}
               >
-                R
+                <img
+                  className="h-5/6 m-auto"
+                  src={
+                    require("../imgs/casino_FILL0_wght400_GRAD0_opsz48.svg")
+                      .default
+                  }
+                  alt="Dice"
+                />
               </button>
             </div>
           </div>
