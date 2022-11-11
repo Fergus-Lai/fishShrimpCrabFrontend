@@ -1,14 +1,35 @@
 import React, { useState, useRef } from "react";
 import ReRegExp from "reregexp";
+import { io } from "socket.io-client";
+import { useParams } from "react-router-dom";
+
 export function Home() {
+  const socket = io();
+
   const re = /[A-Z0-9]{5}/;
   const regex = new RegExp(re);
   const gen = new ReRegExp(re);
-  const [code, setCode] = useState(gen.build());
+  let { id } = useParams();
+  if (!id || !regex.test(id)) {
+    id = gen.build();
+  }
+  const [code, setCode] = useState(id);
   const ref = useRef<HTMLTextAreaElement>(null);
   const nameRef = useRef<HTMLTextAreaElement>(null);
-  const [name, setName] = useState("anya");
+  const [icon, setName] = useState("anya");
   const [userName, setUserName] = useState("");
+
+  function joinRoomHandler() {
+    socket.emit("joinTable", { userName: userName, icon: icon, code: code });
+  }
+
+  function createRoomHandler() {
+    socket.emit("createTable", {
+      userName: userName,
+      icon: icon,
+      code: code,
+    });
+  }
 
   function onBlurHandler() {
     if (!ref.current) {
@@ -44,6 +65,10 @@ export function Home() {
     setUserName(nameRef.current.value);
   }
 
+  function onIconClick() {}
+
+  socket.on("created", () => {});
+
   return (
     <div className="flex w-screen h-screen items-center justify-center bg-violet-800">
       <div className="flex rounded-lg flex-wrap items-stretch w-1/2 h-2/3 bg-slate-700/25">
@@ -75,22 +100,25 @@ export function Home() {
         <div className="flex basis-full h-0"></div>
         <button
           className="flex basis-1/3 lg:basis-1/4 h-[8.33333333333%] font-sans font-semibold text-2xl lg:text-4xl bg-slate-300/25 ml-auto mr-2 mt-2 rounded-lg border border-gray-300/60 text-gray-300"
-          onClick={randomCodeOnClickHandler}
+          onClick={createRoomHandler}
         >
           <div className="flex m-auto">Create</div>
         </button>
         <button
           className="flex basis-1/3 lg:basis-1/4 h-[8.33333333333%] font-sans font-semibold text-2xl lg:text-4xl bg-slate-300/25 mr-auto mt-2 rounded-lg border border-gray-300/60 text-gray-300"
-          onClick={randomCodeOnClickHandler}
+          onClick={joinRoomHandler}
         >
           <div className="flex m-auto">Join</div>
         </button>
         <div className="flex basis-full h-0"></div>
-        <button className="flex aspect-square md:h-[16.66666667%] mx-auto bg-slate-500 rounded-full md:ml-auto md:mr-0 mt-2 border border-gray-300/60">
+        <button
+          onClick={onIconClick}
+          className="flex aspect-square md:h-[16.66666667%] mx-auto bg-slate-500 rounded-full md:ml-auto md:mr-0 mt-2 border border-gray-300/60"
+        >
           <img
             className="flex object-contain object-center mx-auto p-1"
-            src={require(`../imgs/${name}.png`)}
-            alt={name}
+            src={require(`../imgs/${icon}.png`)}
+            alt={icon}
           />
         </button>
         <div className="flex flex-col basis-full md:basis-1/3 h-[16.66666667%] mt-2 mx-auto md:mr-auto md:ml-2">

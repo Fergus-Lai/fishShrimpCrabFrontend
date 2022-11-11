@@ -6,8 +6,22 @@ import { Home } from "./pages/home";
 function App() {
   return (
     <Routes>
-      <Route path="/board" element={<Board />} />
-      <Route path="/" element={<Home />} />
+      <Route path="/board/:id" element={<Board />} />
+      <Route
+        path="/"
+        loader={(params) => {
+          console.log(params);
+          return null;
+        }}
+        element={<Home />}
+      />
+      <Route
+        path="/lobby/:id"
+        element={<Home />}
+        loader={({ params }) => {
+          return params.id;
+        }}
+      />
     </Routes>
   );
 }
