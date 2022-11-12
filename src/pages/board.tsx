@@ -1,39 +1,126 @@
 import image from "../components/image";
-import triple from "../components/triple";
-import single from "../components/single";
-import "../App.css";
+import { Store } from "react-notifications-component";
+import { useState } from "react";
+import { io } from "socket.io-client";
 
 export function Board() {
+  const [bet, setBet] = useState(50);
+  const [money, setMoney] = useState(1000);
+
+  const socket = io("http://localhost:3000/");
+
+  function errorAlert(message: string) {
+    Store.addNotification({
+      title: "Error",
+      message: message,
+      type: "danger",
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+        pauseOnHover: true,
+      },
+    });
+  }
+  function onBetClickHandler(name: string) {
+    if (!socket.connected) {
+      errorAlert("Unable to connect to server");
+      return;
+    }
+    if (bet > money) {
+      errorAlert("Bet greater than your balance");
+      return;
+    }
+    socket.emit("bet", { target: name, bet });
+  }
   return (
-    <div className="bg-cyan-900 h-screen">
-      <div className="flex place-content-center h-1/6">
+    <div className="flex min-w-screen min-h-screen bg-gradient-to-r from-purple-800 via-pink-800 to-orange-800 background-animate flex-wrap">
+      <div className="text-center h-1/3 basis-1/3">Options</div>
+      <div className="text-center h-1/3 basis-1/3">
         <p>dice</p>
       </div>
-      <div className="flex flex-row flex-wrap h-2/6">
-        {single("anya")}
-        {single("anya")}
-        {single("anya")}
-        {single("anya")}
-        {single("anya")}
-        {single("anya")}
-      </div>
-      <div className="flex flex-row flex-wrap h-1/2">
-        <div className="basis-full md:basis-1/12 flex">{image("anya")}</div>
-        <div className="basis-full md:basis-11/12 flex">
-          <div className="basis-full md:basis-1/3">
-            {triple("anya")}
-            {triple("anya")}
-          </div>
-          <div className="basis-full md:basis-1/3">
-            {triple("anya")}
-            {triple("anya")}
-          </div>
-          <div className="basis-full md:basis-1/3">
-            {triple("anya")}
-            {triple("anya")}
-          </div>
-        </div>
-      </div>
+      <div className="text-center h-1/3 basis-1/3">Timer</div>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full md:basis-1/3 h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
+      <button
+        onClick={() => onBetClickHandler("anya")}
+        className="basis-full content-center h-1/3 my-2"
+      >
+        {image("anya")}
+      </button>
     </div>
   );
 }

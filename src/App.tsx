@@ -10,7 +10,6 @@ function App() {
       <Route
         path="/"
         loader={(params) => {
-          console.log(params);
           return null;
         }}
         element={<Home />}

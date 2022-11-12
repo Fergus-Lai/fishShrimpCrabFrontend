@@ -1,22 +1,26 @@
 import React, { useState, useRef, CSSProperties } from "react";
 import ReRegExp from "reregexp";
-import { io } from "socket.io-client";
 import { useParams, useNavigate } from "react-router-dom";
 import { Store } from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import ClipLoader from "react-spinners/BeatLoader";
 import useWindowDimensions from "../hooks/useWinDim";
+import { io } from "socket.io-client";
+import { v4 as uuidv4 } from "uuid";
 
 export function Home() {
   const { height, width } = useWindowDimensions();
+
+  const userId = localStorage.getItem("userId") || uuidv4();
+  localStorage.setItem("userId", userId);
+
+  const socket = io("http://localhost:3000/");
 
   const override: CSSProperties = {
     position: "absolute",
     left: Math.floor(width / 2 - 50),
     top: Math.floor(height / 2 - 50),
   };
-
-  const socket = io("http://localhost:3000/");
 
   const navigate = useNavigate();
 
@@ -51,13 +55,27 @@ export function Home() {
     });
   }
 
+  function connectedToServer() {
+    if (!socket.connected) {
+      errorAlert("Unable to connect to server");
+    }
+    return socket.connected;
+  }
+
   function joinRoomHandler() {
     if (userName === "") {
       errorAlert("Empty user name");
       return;
     }
-    setLoading(true);
-    socket.emit("joinTable", { name: userName, icon: icon, code: code });
+    if (connectedToServer()) {
+      setLoading(true);
+      socket.emit("joinTable", {
+        userId,
+        name: userName,
+        icon: icon,
+        code: code,
+      });
+    }
   }
 
   function createRoomHandler() {
@@ -65,12 +83,15 @@ export function Home() {
       errorAlert("Empty user name");
       return;
     }
-    setLoading(true);
-    socket.emit("createTable", {
-      name: userName,
-      icon: icon,
-      code: code,
-    });
+    if (connectedToServer()) {
+      setLoading(true);
+      socket.emit("createTable", {
+        userId,
+        name: userName,
+        icon: icon,
+        code: code,
+      });
+    }
   }
 
   function onBlurHandler() {
@@ -116,7 +137,7 @@ export function Home() {
 
   socket.on("joined", () => {
     setLoading(false);
-    navigate(`/board/${code}`);
+    navigate(`/board/${code}`, { state: socket });
   });
 
   socket.on("table_duplicate", () => {
