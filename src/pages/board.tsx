@@ -1,13 +1,27 @@
 import image from "../components/image";
 import { Store } from "react-notifications-component";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
+import "react-notifications-component/dist/theme.css";
+import { useParams, useNavigate, redirect } from "react-router-dom";
 
 export function Board() {
   const [bet, setBet] = useState(50);
   const [money, setMoney] = useState(1000);
 
   const socket = io("http://localhost:3000/");
+
+  const navigate = useNavigate();
+  const { id } = useParams();
+
+  useEffect(() => {
+    const userId = localStorage.getItem("userId");
+
+    if (!userId) {
+      navigate("/");
+    }
+    socket.emit("loaded", { userId, id });
+  });
 
   function errorAlert(message: string) {
     Store.addNotification({
@@ -36,6 +50,14 @@ export function Board() {
     }
     socket.emit("bet", { target: name, bet });
   }
+
+  socket.on("tableIdNotMatch", () => {
+    navigate("/");
+  });
+  socket.on("tableNotFound", () => {
+    navigate("/");
+  });
+
   return (
     <div className="flex min-w-screen min-h-screen bg-gradient-to-r from-purple-800 via-pink-800 to-orange-800 background-animate flex-wrap">
       <div className="text-center h-1/3 basis-1/3">Options</div>

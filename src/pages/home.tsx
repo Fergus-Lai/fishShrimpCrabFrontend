@@ -137,7 +137,7 @@ export function Home() {
 
   socket.on("joined", () => {
     setLoading(false);
-    navigate(`/board/${code}`, { state: socket });
+    navigate(`/board/${code}`);
   });
 
   socket.on("table_duplicate", () => {

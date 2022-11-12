@@ -6,7 +6,13 @@ import { Home } from "./pages/home";
 function App() {
   return (
     <Routes>
-      <Route path="/board/:id" element={<Board />} />
+      <Route
+        path="/board/:id"
+        loader={(params) => {
+          return null;
+        }}
+        element={<Board />}
+      />
       <Route
         path="/"
         loader={(params) => {
