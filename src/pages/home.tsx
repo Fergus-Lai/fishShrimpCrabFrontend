@@ -130,7 +130,7 @@ export function Home() {
   });
 
   return (
-    <div className="w-screen h-screen bg-violet-800 overflow-hidden">
+    <div className="w-screen h-screen bg-gradient-to-r from-purple-800 via-pink-800 to-orange-800 background-animate overflow-hidden">
       <ClipLoader
         color={"#99F6E4"}
         loading={loading}
@@ -139,7 +139,11 @@ export function Home() {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
-      <div className="flex w-full h-full items-center justify-center">
+      <div
+        className={`flex w-full h-full items-center justify-center ${
+          loading ? "bg-slate-700/50" : ""
+        }`}
+      >
         <div className="flex rounded-lg flex-wrap items-stretch w-1/2 h-2/3 bg-slate-700/25">
           <div className="flex basis-full text-center h-1/4">
             Fish Shrimp Crab
@@ -152,11 +156,13 @@ export function Home() {
             value={code}
             onChange={onChangeHandler}
             onBlur={onBlurHandler}
+            disabled={loading}
             className="flex basis-2/3 lg:basis-1/3 h-[8.33333333333%] mx-auto lg:ml-auto lg:mr-0 mt-2 font-sans font-semibold overflow-hidden resize-none text-2xl lg:text-4xl text-center text-gray-300 bg-slate-300/25 rounded-lg border border-gray-300/60"
           ></textarea>
           <button
             className="flex lg:aspect-square basis-2/3 h-[8.33333333333%] lg:basis-1/12 bg-slate-300/25 mt-2 mx-auto lg:mr-auto lg:ml-2 rounded-lg border border-gray-300/60"
             onClick={randomCodeOnClickHandler}
+            disabled={loading}
           >
             <img
               className="m-auto aspect-square"
@@ -170,18 +176,21 @@ export function Home() {
           <button
             className="flex basis-1/3 lg:basis-1/4 h-[8.33333333333%] font-sans font-semibold text-2xl lg:text-4xl bg-slate-300/25 ml-auto mr-2 mt-2 rounded-lg border border-gray-300/60 text-gray-300"
             onClick={createRoomHandler}
+            disabled={loading}
           >
             <div className="flex m-auto">Create</div>
           </button>
           <button
             className="flex basis-1/3 lg:basis-1/4 h-[8.33333333333%] font-sans font-semibold text-2xl lg:text-4xl bg-slate-300/25 mr-auto mt-2 rounded-lg border border-gray-300/60 text-gray-300"
             onClick={joinRoomHandler}
+            disabled={loading}
           >
             <div className="flex m-auto">Join</div>
           </button>
           <div className="flex basis-full h-0"></div>
           <button
             onClick={onIconClick}
+            disabled={loading}
             className="flex aspect-square md:h-[16.66666667%] mx-auto bg-slate-500 rounded-full md:ml-auto md:mr-0 mt-2 border border-gray-300/60"
           >
             <img
@@ -190,8 +199,8 @@ export function Home() {
               alt={icon}
             />
           </button>
-          <div className="flex flex-col basis-full md:basis-1/3 h-[16.66666667%] mt-2 mx-auto md:mr-auto md:ml-2">
-            <div className="font-sans font-semibold text-2xl text-gray-300 my-2">
+          <div className="flex flex-col basis-full md:basis-1/3 h-1/6 md:h-[16.66666667%] mt-2 mx-auto md:mr-auto md:ml-2">
+            <div className="font-sans font-semibold text-2xl text-gray-300 my-2 text-center md:text-left">
               Name
             </div>
             <textarea
@@ -202,7 +211,8 @@ export function Home() {
               value={userName}
               onChange={onUserNameChange}
               onBlur={onUserNameBlur}
-              className="font-sans font-semibold overflow-hidden resize-none text-2xl text-center text-gray-300 bg-slate-300/25 rounded-lg border border-gray-300/60"
+              disabled={loading}
+              className="flex font-sans font-semibold overflow-hidden w-5/6 resize-none text-2xl text-center text-gray-300 bg-slate-300/25 rounded-lg border mx-auto md:mx-0 border-gray-300/60"
             ></textarea>
           </div>
           <div className="flex basis-full h-full"></div>
