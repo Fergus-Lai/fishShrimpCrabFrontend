@@ -1,4 +1,4 @@
-import React, { useState, useRef, CSSProperties, useEffect } from "react";
+import React, { useState, useRef, CSSProperties } from "react";
 import ReRegExp from "reregexp";
 import { io } from "socket.io-client";
 import { useParams, useNavigate } from "react-router-dom";
@@ -130,7 +130,7 @@ export function Home() {
   });
 
   return (
-    <div>
+    <div className="w-screen h-screen bg-violet-800 overflow-hidden">
       <ClipLoader
         color={"#99F6E4"}
         loading={loading}
@@ -139,7 +139,7 @@ export function Home() {
         aria-label="Loading Spinner"
         data-testid="loader"
       />
-      <div className="flex w-screen h-screen items-center justify-center bg-violet-800">
+      <div className="flex w-full h-full items-center justify-center">
         <div className="flex rounded-lg flex-wrap items-stretch w-1/2 h-2/3 bg-slate-700/25">
           <div className="flex basis-full text-center h-1/4">
             Fish Shrimp Crab
