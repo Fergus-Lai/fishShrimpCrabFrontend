@@ -1,10 +1,14 @@
 import React, { useState, useRef } from "react";
 import ReRegExp from "reregexp";
 import { io } from "socket.io-client";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
+import { Store } from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 export function Home() {
-  const socket = io();
+  const socket = io("http://localhost:3000/");
+
+  const navigate = useNavigate();
 
   const re = /[A-Z0-9]{5}/;
   const regex = new RegExp(re);
@@ -19,13 +23,34 @@ export function Home() {
   const [icon, setName] = useState("anya");
   const [userName, setUserName] = useState("");
 
+  function errorAlert(message: string) {
+    Store.addNotification({
+      title: "Error",
+      message: message,
+      type: "danger",
+      insert: "top",
+      container: "bottom-right",
+      animationIn: ["animate__animated", "animate__fadeIn"],
+      animationOut: ["animate__animated", "animate__fadeOut"],
+      dismiss: {
+        duration: 5000,
+        onScreen: true,
+        pauseOnHover: true,
+      },
+    });
+  }
+
   function joinRoomHandler() {
-    socket.emit("joinTable", { userName: userName, icon: icon, code: code });
+    socket.emit("joinTable", { name: userName, icon: icon, code: code });
   }
 
   function createRoomHandler() {
+    if (userName === "") {
+      errorAlert("Empty user name");
+      return;
+    }
     socket.emit("createTable", {
-      userName: userName,
+      name: userName,
       icon: icon,
       code: code,
     });
@@ -67,7 +92,13 @@ export function Home() {
 
   function onIconClick() {}
 
-  socket.on("created", () => {});
+  socket.on("created", () => {
+    navigate(`/board/${code}`);
+  });
+
+  socket.on("table_duplicate", () => {
+    errorAlert("Table with the same code already exists");
+  });
 
   return (
     <div className="flex w-screen h-screen items-center justify-center bg-violet-800">
