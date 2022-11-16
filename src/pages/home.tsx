@@ -14,7 +14,9 @@ export function Home() {
   const userId = localStorage.getItem("userId") || uuidv4();
   localStorage.setItem("userId", userId);
 
-  const socket = io("http://localhost:3000/");
+  const socket = io("http://localhost:3000/", {
+    withCredentials: true,
+  });
 
   const override: CSSProperties = {
     position: "absolute",

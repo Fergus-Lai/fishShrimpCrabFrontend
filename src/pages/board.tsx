@@ -12,8 +12,11 @@ export function Board() {
   const [bet, setBet] = useState(50);
   const [users, setUsers] = useState(Array<User>);
   const [user, setUser] = useState(createUser("abc", "FFF", "anya", 1000));
+  const [connected, setConnected] = useState(false);
 
-  const socket = io("http://localhost:3000/");
+  const socket = io("http://localhost:3000/", {
+    withCredentials: true,
+  });
 
   const navigate = useNavigate();
   const { id } = useParams();
@@ -27,8 +30,16 @@ export function Board() {
     socket.emit("loading", { userId, id });
   });
 
+  socket.on("connect", () => {
+    setConnected(true);
+  });
+
+  socket.on("disconnect", () => {
+    setConnected(false);
+  });
+
   function onBetClickHandler(name: string) {
-    if (!socket.connected) {
+    if (connected) {
       errorAlert("Unable to connect to server");
       return;
     }
@@ -52,7 +63,6 @@ export function Board() {
     if (userId) {
       setUser(createUser(userId, username, icon, money));
       setUsers(users);
-      console.log(users);
     } else {
       navigate("/");
     }
@@ -140,73 +150,73 @@ export function Board() {
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("loid")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("yor")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("bond")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("tbdA")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("tbdB")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3anya")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3loyd")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3yor")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3bond")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3tbdA")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3tbdB")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
       >
         {image("anya")}
       </button>
       <button
-        onClick={() => onBetClickHandler("anya")}
+        onClick={() => onBetClickHandler("3any")}
         className="basis-full content-center h-1/3 my-2"
       >
         {image("anya")}
