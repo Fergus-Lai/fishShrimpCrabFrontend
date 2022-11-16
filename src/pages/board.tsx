@@ -1,5 +1,5 @@
 import image from "../components/image";
-import { Store } from "react-notifications-component";
+import { errorAlert, successAlert } from "../functions/alert";
 import { useState, useEffect } from "react";
 import { io } from "socket.io-client";
 import "react-notifications-component/dist/theme.css";
@@ -27,39 +27,6 @@ export function Board() {
     socket.emit("loading", { userId, id });
   });
 
-  function errorAlert(message: string) {
-    Store.addNotification({
-      title: "Error",
-      message: message,
-      type: "danger",
-      insert: "top",
-      container: "bottom-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-        pauseOnHover: true,
-      },
-    });
-  }
-
-  function successAlert(message: string) {
-    Store.addNotification({
-      title: "Success",
-      message: message,
-      type: "success",
-      insert: "top",
-      container: "bottom-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-        pauseOnHover: true,
-      },
-    });
-  }
   function onBetClickHandler(name: string) {
     if (!socket.connected) {
       errorAlert("Unable to connect to server");

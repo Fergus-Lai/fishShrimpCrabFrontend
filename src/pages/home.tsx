@@ -1,7 +1,7 @@
 import React, { useState, useRef, CSSProperties } from "react";
 import ReRegExp from "reregexp";
 import { useParams, useNavigate } from "react-router-dom";
-import { Store } from "react-notifications-component";
+import { errorAlert } from "../functions/alert";
 import "react-notifications-component/dist/theme.css";
 import ClipLoader from "react-spinners/BeatLoader";
 import useWindowDimensions from "../hooks/useWinDim";
@@ -37,23 +37,6 @@ export function Home() {
   const [icon, setName] = useState("anya");
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false);
-
-  function errorAlert(message: string) {
-    Store.addNotification({
-      title: "Error",
-      message: message,
-      type: "danger",
-      insert: "top",
-      container: "bottom-right",
-      animationIn: ["animate__animated", "animate__fadeIn"],
-      animationOut: ["animate__animated", "animate__fadeOut"],
-      dismiss: {
-        duration: 5000,
-        onScreen: true,
-        pauseOnHover: true,
-      },
-    });
-  }
 
   function connectedToServer() {
     if (!socket.connected) {
