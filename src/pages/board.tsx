@@ -93,7 +93,7 @@ export function Board() {
 
   return (
     <div className="flex min-w-screen min-h-screen bg-gradient-to-r from-purple-800 via-pink-800 to-orange-800 background-animate flex-wrap">
-      <div className="flex flex-row h-1/3 basis-1/4 flex-wrap">
+      <div className="flex flex-row h-1/3 basis-full md:basis-1/4 flex-wrap">
         <div className="flex basis-full h-full">
           <CopyToClipboard
             text={`${window.location.host}/lobby/${id}`}
@@ -162,10 +162,10 @@ export function Board() {
         </div>
         <div className="flex basis-full h-full"></div>
       </div>
-      <div className="text-center h-1/3 basis-1/2">
+      <div className="text-center h-1/3 basis-full md:basis-1/2">
         <p>dice</p>
       </div>
-      <div className="text-center h-1/3 basis-1/4">Timer</div>
+      <div className="text-center h-1/3 basis-full md:basis-1/4">Timer</div>
       <button
         onClick={() => onBetClickHandler("anya")}
         className="basis-full md:basis-1/3 h-1/3 my-2"
@@ -244,7 +244,10 @@ export function Board() {
       >
         {image("anya")}
       </button>
-      <div className="flex basis-full justify-center">{userComp(user)}</div>
+      <div className="flex basis-full justify-center flex-col items-center gap-y-5">
+        {userComp(user)}
+        {users.map((other) => userComp(other))}
+      </div>
     </div>
   );
 }
