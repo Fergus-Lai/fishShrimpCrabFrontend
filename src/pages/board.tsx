@@ -60,7 +60,6 @@ export function Board() {
     let { id, money, icon, username } = data;
     let newUser = createUser(id, username, icon, money);
     let newUsers = [...userList, newUser];
-    console.log(newUsers);
     setUserList(newUsers);
   });
 
