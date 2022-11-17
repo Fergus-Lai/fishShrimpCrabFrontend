@@ -9,8 +9,17 @@ import { io } from "socket.io-client";
 import { v4 as uuidv4 } from "uuid";
 
 export function Home() {
+  // Get Dimension of Window
   const { height, width } = useWindowDimensions();
 
+  // Position To Middle
+  const override: CSSProperties = {
+    position: "absolute",
+    left: Math.floor(width / 2 - 50),
+    top: Math.floor(height / 2 - 50),
+  };
+
+  // Set userId to uuidv4 If Not Exists
   const userId = localStorage.getItem("userId") || uuidv4();
   localStorage.setItem("userId", userId);
 
@@ -18,21 +27,19 @@ export function Home() {
     withCredentials: true,
   });
 
-  const override: CSSProperties = {
-    position: "absolute",
-    left: Math.floor(width / 2 - 50),
-    top: Math.floor(height / 2 - 50),
-  };
-
   const navigate = useNavigate();
+  let { id } = useParams();
 
+  // Test If Room Code Satisfy Regex
   const re = /[A-Z0-9]{5}/;
   const regex = new RegExp(re);
+  // Random Word From Regex Generator
   const gen = new ReRegExp(re);
-  let { id } = useParams();
+  // If No Room Code or Failed Test Generate New Code
   if (!id || !regex.test(id)) {
     id = gen.build();
   }
+
   const [code, setCode] = useState(id);
   const ref = useRef<HTMLTextAreaElement>(null);
   const nameRef = useRef<HTMLTextAreaElement>(null);
@@ -40,6 +47,7 @@ export function Home() {
   const [userName, setUserName] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Connection Status
   function connectedToServer() {
     if (!socket.connected) {
       errorAlert("Unable to connect to server");
@@ -47,6 +55,7 @@ export function Home() {
     return socket.connected;
   }
 
+  // Handle Join Room Button Click
   function joinRoomHandler() {
     if (userName === "") {
       errorAlert("Empty user name");
@@ -63,6 +72,7 @@ export function Home() {
     }
   }
 
+  // Handle Create Room Button Click
   function createRoomHandler() {
     if (userName === "") {
       errorAlert("Empty user name");
@@ -79,6 +89,7 @@ export function Home() {
     }
   }
 
+  // Handle Unfocus of Textbox of Room Code
   function onBlurHandler() {
     if (!ref.current) {
       return;
@@ -88,6 +99,7 @@ export function Home() {
     }
   }
 
+  // Handle Changes of Textbox of Room Code
   function onChangeHandler() {
     if (!ref.current) {
       return;
@@ -95,10 +107,12 @@ export function Home() {
     setCode(ref.current.value);
   }
 
+  // Handle Click of Dice Button
   function randomCodeOnClickHandler() {
     setCode(gen.build());
   }
 
+  // Handle Changes of Username Textbox
   function onUserNameChange() {
     if (!nameRef.current) {
       return;
@@ -106,6 +120,7 @@ export function Home() {
     setUserName(nameRef.current.value);
   }
 
+  // Handle Unfocus of Username Textbox
   function onUserNameBlur() {
     if (!nameRef.current) {
       return;
@@ -113,13 +128,16 @@ export function Home() {
     setUserName(nameRef.current.value);
   }
 
+  // Handle Change Icon
   function onIconClick() {}
 
+  // Handle joined Event from Server
   socket.on("joined", () => {
     setLoading(false);
     navigate(`/board/${code}`);
   });
 
+  // Handle Error From Joining
   socket.on("tableDuplicate", () => {
     setLoading(false);
     errorAlert("Table with the same code already exists");

@@ -21,15 +21,20 @@ export function Board() {
   const navigate = useNavigate();
   const { id } = useParams();
 
+  // On Mount
   useEffect(() => {
+    // Get userId
     const userId = localStorage.getItem("userId");
 
+    // Redirect To Root If No userId
     if (!userId) {
       navigate("/");
     }
+    // Emit Loading Event To Server
     socket.emit("loading", { userId, id });
   }, []);
 
+  // Change state for server connection
   socket.on("connect", () => {
     setConnected(true);
   });
@@ -37,18 +42,23 @@ export function Board() {
     setConnected(false);
   });
 
+  // Handle clicking on bet
   function onBetClickHandler(name: string) {
+    // No Connection
     if (!connected) {
       errorAlert("Unable to connect to server");
       return;
     }
+    // Bet > Money
     if (bet > user.money) {
       errorAlert("Bet greater than your balance");
       return;
     }
+    // Emit Bet Event To Server
     socket.emit("bet", { target: name, bet });
   }
 
+  // Handle Error From Loading
   socket.on("tableIdNotMatch", () => {
     navigate("/");
   });
@@ -56,24 +66,32 @@ export function Board() {
     navigate("/");
   });
 
+  // Handle Other Player Joining
   socket.on("playerJoined", (data) => {
     let { id, money, icon, username } = data;
+    // Create New User
     let newUser = createUser(id, username, icon, money);
+    // Append To The Array
     let newUsers = [...userList, newUser];
     setUserList(newUsers);
   });
 
+  // Handle Other Player Leaving
   socket.on("playerLeft", (data) => {
     let id = data;
+    // Find Index of The Player in Array
     let i = userList.findIndex((o) => o.id === id);
+    // Remove From The List
     let newList = userList.splice(i, 1);
     setUserList(newList);
   });
 
+  // Handle Finished Loading Event
   socket.on("loaded", (data) => {
     let { money, icon, username, users } = data;
     let userId = localStorage.getItem("userId");
     if (userId) {
+      // Create User and Users
       let newUser = createUser(userId, username, icon, money);
       setUser(newUser);
       setUserList(users);
