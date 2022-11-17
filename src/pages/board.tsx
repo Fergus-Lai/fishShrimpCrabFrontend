@@ -10,7 +10,7 @@ import { User, createUser } from "../interface/user";
 
 export function Board() {
   const [bet, setBet] = useState(50);
-  const [userList, setUsers] = useState(Array<User>);
+  const [userList, setUserList] = useState(Array<User>);
   const [user, setUser] = useState(createUser("abc", "FFF", "anya", 1000));
   const [connected, setConnected] = useState(false);
 
@@ -33,13 +33,12 @@ export function Board() {
   socket.on("connect", () => {
     setConnected(true);
   });
-
   socket.on("disconnect", () => {
     setConnected(false);
   });
 
   function onBetClickHandler(name: string) {
-    if (connected) {
+    if (!connected) {
       errorAlert("Unable to connect to server");
       return;
     }
@@ -61,7 +60,15 @@ export function Board() {
     let { id, money, icon, username } = data;
     let newUser = createUser(id, username, icon, money);
     let newUsers = [...userList, newUser];
-    setUsers(newUsers);
+    console.log(newUsers);
+    setUserList(newUsers);
+  });
+
+  socket.on("playerLeft", (data) => {
+    let id = data;
+    let i = userList.findIndex((o) => o.id === id);
+    let newList = userList.splice(i, 1);
+    setUserList(newList);
   });
 
   socket.on("loaded", (data) => {
@@ -70,7 +77,7 @@ export function Board() {
     if (userId) {
       let newUser = createUser(userId, username, icon, money);
       setUser(newUser);
-      setUsers(users);
+      setUserList(users);
     } else {
       navigate("/");
     }
