@@ -10,7 +10,7 @@ import { User, createUser } from "../interface/user";
 
 export function Board() {
   const [bet, setBet] = useState(50);
-  const [users, setUsers] = useState(Array<User>);
+  const [userList, setUsers] = useState(Array<User>);
   const [user, setUser] = useState(createUser("abc", "FFF", "anya", 1000));
   const [connected, setConnected] = useState(false);
 
@@ -28,7 +28,7 @@ export function Board() {
       navigate("/");
     }
     socket.emit("loading", { userId, id });
-  });
+  }, []);
 
   socket.on("connect", () => {
     setConnected(true);
@@ -57,11 +57,19 @@ export function Board() {
     navigate("/");
   });
 
+  socket.on("playerJoined", (data) => {
+    let { id, money, icon, username } = data;
+    let newUser = createUser(id, username, icon, money);
+    let newUsers = [...userList, newUser];
+    setUsers(newUsers);
+  });
+
   socket.on("loaded", (data) => {
     let { money, icon, username, users } = data;
     let userId = localStorage.getItem("userId");
     if (userId) {
-      setUser(createUser(userId, username, icon, money));
+      let newUser = createUser(userId, username, icon, money);
+      setUser(newUser);
       setUsers(users);
     } else {
       navigate("/");
@@ -223,7 +231,7 @@ export function Board() {
       </button>
       <div className="flex basis-full justify-center flex-col items-center gap-y-5">
         {userComp(user)}
-        {users.map((other) => userComp(other))}
+        {userList.map((other) => userComp(other))}
       </div>
     </div>
   );

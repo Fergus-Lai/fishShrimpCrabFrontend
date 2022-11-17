@@ -56,9 +56,9 @@ export function Home() {
       setLoading(true);
       socket.emit("joinTable", {
         userId,
-        name: userName,
-        icon: icon,
-        code: code,
+        userName,
+        icon,
+        code,
       });
     }
   }
@@ -72,9 +72,9 @@ export function Home() {
       setLoading(true);
       socket.emit("createTable", {
         userId,
-        name: userName,
-        icon: icon,
-        code: code,
+        userName,
+        icon,
+        code,
       });
     }
   }
@@ -115,17 +115,12 @@ export function Home() {
 
   function onIconClick() {}
 
-  socket.on("created", () => {
-    setLoading(false);
-    navigate(`/board/${code}`);
-  });
-
   socket.on("joined", () => {
     setLoading(false);
     navigate(`/board/${code}`);
   });
 
-  socket.on("table_duplicate", () => {
+  socket.on("tableDuplicate", () => {
     setLoading(false);
     errorAlert("Table with the same code already exists");
   });

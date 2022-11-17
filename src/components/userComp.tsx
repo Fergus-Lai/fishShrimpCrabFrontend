@@ -2,7 +2,10 @@ import { User } from "../interface/user";
 
 export default function userComp(user: User) {
   return (
-    <div className="flex basis-1/3 h-2/3 bg-slate-300/25 rounded-lg border border-gray-300/60">
+    <div
+      key={user.id}
+      className="flex basis-1/3 h-2/3 bg-slate-300/25 rounded-lg border border-gray-300/60"
+    >
       <div className="flex h-full aspect-square my-auto bg-slate-500 rounded-full ml-2 border border-gray-300/60">
         <img
           className="flex object-contain object-center mx-auto p-1"
